@@ -2,6 +2,10 @@ import plotly.graph_objects as go
 import pandas as pd
 from datetime import date,timedelta
 import plotly.io as pio
+from dotenv import load_dotenv
+import boto3
+import os
+load_dotenv()
 
 # Load data
 
@@ -20,7 +24,7 @@ fig = go.Figure()
 
 
 fig.add_trace(go.Scattergl(
-   x=list(df.TIMESTAMP), 
+   x=list(df.TIMESTAMP),
     y=list(df.Rain_mm_Tot),
     line={"width": 0.5},
     marker={"size": 2},
@@ -30,7 +34,7 @@ fig.add_trace(go.Scattergl(
 ))
 
 fig.add_trace(go.Scattergl(
-   x=list(df.TIMESTAMP), 
+   x=list(df.TIMESTAMP),
     y=list(df.Rain_24hr),
     line={"width": 1},
     #marker={"size": 2},
@@ -41,7 +45,7 @@ fig.add_trace(go.Scattergl(
 ))
 
 fig.add_trace(go.Scattergl(
-    x=list(df.TIMESTAMP), 
+    x=list(df.TIMESTAMP),
     y=list(df.WS_mph),
     line={"width": 0.5},
     marker={"size": 2},
@@ -51,7 +55,7 @@ fig.add_trace(go.Scattergl(
 ))
 
 fig.add_trace(go.Scattergl(
-    x=list(df.TIMESTAMP), 
+    x=list(df.TIMESTAMP),
     y=list(df.WS_mph_Max),
     line={"width": 0.5},
     marker={"size": 2},
@@ -61,7 +65,7 @@ fig.add_trace(go.Scattergl(
 ))
 
 fig.add_trace(go.Scattergl(
-    x=list(df.TIMESTAMP), 
+    x=list(df.TIMESTAMP),
     y=list(df.WindDir),
     #line={"width": 2},
     marker={"size": 2},
@@ -71,7 +75,7 @@ fig.add_trace(go.Scattergl(
 ))
 
 fig.add_trace(go.Scattergl(
-    x=list(df.TIMESTAMP), 
+    x=list(df.TIMESTAMP),
     y=list(df.Temp_air_Avg),
     line={"width": 0.5},
     marker={"size": 2},
@@ -80,7 +84,7 @@ fig.add_trace(go.Scattergl(
     yaxis="y4",
 ))
 fig.add_trace(go.Scattergl(
-    x=list(df.TIMESTAMP), 
+    x=list(df.TIMESTAMP),
     y=list(df.Temp_soil_Avg),
     line={"width": 0.5},
     marker={"size": 2},
@@ -89,7 +93,7 @@ fig.add_trace(go.Scattergl(
     yaxis="y9",
 ))
 fig.add_trace(go.Scattergl(
-    x=list(df.TIMESTAMP), 
+    x=list(df.TIMESTAMP),
     y=list(df.CO2STP_Avg),
     line={"width": 0.5},
     marker={"size": 2},
@@ -98,7 +102,7 @@ fig.add_trace(go.Scattergl(
     yaxis="y5",
 ))
 fig.add_trace(go.Scattergl(
-    x=list(df.TIMESTAMP), 
+    x=list(df.TIMESTAMP),
     y=list(df.CO2LiSTP_Avg),
     line={"width": 0.5},
     marker={"size": 2},
@@ -108,7 +112,7 @@ fig.add_trace(go.Scattergl(
 ))
 
 fig.add_trace(go.Scattergl(
-    x=list(df.TIMESTAMP), 
+    x=list(df.TIMESTAMP),
     y=list(df.Pressure_Avg),
     line={"width": 0.5},
     marker={"size": 2},
@@ -145,7 +149,7 @@ fig.update_layout(
       	#nticks=10,
       	ticks="inside",
       	showticklabels = True,
-        
+
     ),
      yaxis1=dict(
      	title="Rain mm",
@@ -243,7 +247,7 @@ fig.update_layout(
         zerolinecolor="blue",
         zerolinewidth=0.5,
     ),
-    
+
     yaxis5=dict(
         title="CO2 soil ppm",
         anchor="x",
@@ -317,10 +321,10 @@ fig.update_layout(
         type="linear",
         showgrid = False,
         zeroline=False
-    )    
-    
-    
-        
+    )
+
+
+
 )
 
 
@@ -385,6 +389,9 @@ fig.update_layout(
 )
 
 pio.write_html(fig,"plot.html",full_html=False)
+
+s3 = boto3.resource('s3')
+s3.meta.client.upload_file('plot.html', 'flooding-data', 'plot.html', ExtraArgs={'ACL': 'public-read'})
 
 #fig.write_html("plot.html", full_html=false)
 #fig.show()
