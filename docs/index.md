@@ -9,8 +9,8 @@ http.send();
 http.onreadystatechange = function (e) {
 console.log(e);
    if (this.readyState === 4 && this.status === 200) {
-	console.log(Http);
-   	document.getElementById("text").innerHTML = Http.responseText;	
+	console.log(http);
+   	document.getElementById("text").innerHTML = http.responseText;	
    }
 }
 </script>
