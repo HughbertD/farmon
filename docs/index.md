@@ -3,5 +3,13 @@
 <div id="text"></div>
  
 <script>
-document.getElementById("text").innerHTML = "Text added by JavaScript code";
+const http = new XMLHTTPRequest();
+http.open("GET", 'https://flooding-data.s3.eu-west-2.amazonaws.com/plot.html');
+http.send();
+http.onreadystatechange = (e) => {
+   if (this.readyState == 4 && this.status == 200) {
+	console.log(Http);
+   	document.getElementById("text").innerHTML = Http.responseText;	
+   }
+}
 </script>
